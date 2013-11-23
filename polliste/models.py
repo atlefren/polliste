@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, SmallInteger
 from sqlalchemy.orm import relationship, backref
 
 from database import Base
@@ -39,3 +39,28 @@ class Brewery(Base):
         assert len(name) > 0
         self.name = name
 
+ROLE_USER = 0
+ROLE_ADMIN = 1
+
+class User(Base):
+    __tablename__ = 'user'
+    id = Column(Integer, primary_key = True)
+    username = Column(String(64), index = True, unique = True)
+    email = Column(String(120), index = True, unique = True)
+    role = Column(SmallInteger, default = ROLE_USER)
+    name = Column(String(120), index = True, unique = True)
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return unicode(self.id)
+
+    def __repr__(self):
+        return '<User %r>' % (self.username)

@@ -13,7 +13,11 @@ def create_app(db_url):
     static_dir = os.path.join(path, 'polliste/static')
 
     app = Flask(__name__, template_folder=tmpl_dir, static_folder=static_dir)
+    app.secret_key = os.environ.get('SECRET_KEY', 'development_fallback')
+
     (app.db_session, app.db_metadata, app.db_engine) = init_db(db_url)
+
+
 
     @app.teardown_request
     def shutdown_session(exception=None):

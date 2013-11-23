@@ -1,5 +1,7 @@
 Flask==0.10.1
 Flask-Assets==0.8
+Flask-Login==0.2.7
+Flask-OpenID==1.1.1
 Flask-RESTful==0.2.7
 Jinja2==2.7.1
 MarkupSafe==0.18
@@ -9,6 +11,7 @@ argparse==1.2.1
 cssmin==0.2.0
 distribute==0.6.24
 itsdangerous==0.23
+python-openid==2.2.5
 six==1.4.1
 webassets==0.8
 wsgiref==0.1.2
