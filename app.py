@@ -4,14 +4,11 @@ from database import init_db
 from polliste.api import create_api
 from polliste.views import setup_views
 
-
 API_VERSION = 'v1'
 
 def create_app(db_url):
     app = Flask(__name__)
     (app.db_session, app.db_metadata, app.db_engine) = init_db(db_url)
-
-
 
     @app.teardown_request
     def shutdown_session(exception=None):
