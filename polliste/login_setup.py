@@ -50,7 +50,7 @@ def setup_login(app):
             user = User(
                 username=username,
                 email=resp.email,
-                name=resp.fullname, 
+                name=resp.fullname,
                 role=ROLE_USER
             )
 
