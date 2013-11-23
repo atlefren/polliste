@@ -1,9 +1,11 @@
+import os
+
 from flask import render_template, g, request, session, redirect, url_for
 from flask.ext.login import LoginManager
 from flask.ext.openid import OpenID
 from flask.ext.login import login_user, logout_user, current_user, login_required
 
-from models import User, ROLE_USER
+from models import User, ROLE_USER, ROLE_ADMIN
 
 def setup_login(app):
     open_id = OpenID(app, 'tmp')
@@ -53,6 +55,9 @@ def setup_login(app):
                 name=resp.fullname,
                 role=ROLE_USER
             )
+
+            if user.email == os.environ.get('ADMIN_EMAIL', ''):
+                user.role = ROLE_ADMIN
 
             app.db_session.add(user)
             app.db_session.commit()
