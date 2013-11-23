@@ -62,5 +62,9 @@ class User(Base):
     def get_id(self):
         return unicode(self.id)
 
+    @property
+    def is_admin(self):
+        return self.role == ROLE_ADMIN
+
     def __repr__(self):
         return '<User %r>' % (self.username)
