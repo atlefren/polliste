@@ -6,7 +6,7 @@ from functools import wraps
 from models import Pol, Brewery, Beer
 
 
-def authenticate(func):
+def ensure_user(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         if g.user.is_authenticated():
@@ -45,7 +45,7 @@ class PolResource(restful.Resource):
         return pol.all()
 
     @marshal_with(pol_fields)
-    @authenticate
+    @ensure_user
     @ensure_admin
     def post(self):
         data = request.get_json()
@@ -78,7 +78,7 @@ class BreweryResource(restful.Resource):
 
 
     @marshal_with(brewery_fields)
-    @authenticate
+    @ensure_user
     def post(self):
         data = request.get_json()
         name = data.get('name')
@@ -103,7 +103,7 @@ beer_fields = {
 class BeerResource(restful.Resource):
 
     @marshal_with(beer_fields)
-    @authenticate
+    @ensure_user
     def post(self):
         data = request.get_json()
         name = data.pop('name')
