@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Spesialpollista</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="list-group">
+            {%for pol in pol_list %}
+            <a href="{{ url_for('pol', pol_id=pol.id) }}" class="list-group-item">{{pol.name}}</a>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-md-8">
+        <p class="lead">Velg pol til venstre.</p>
+    </div>
+</div>
+{% endblock %}
