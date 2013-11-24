@@ -1,6 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1>Admin</h1>
+    <h1>Admin</h1>
+
+    <div id="createPol"></div>
+
+{% endblock %}
+
+
+{% block js %}
+{{ super() }}
+
+{% assets "adminpage_js" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+<script type="text/javascript">
+    (function () {
+        "use strict";
+        $("#createPol").append(new Polliste.PolCreateForm().render().$el);
+    }());
+</script>
+{% endblock %}
+
+{% block templates %}
+{{ super() }}
+<script type="text/template" id="pol_create_template">
+    <fieldset>
+        <legend>Nytt pol</legend>
+        <div class="form-group">
+            <label for="inputName" class="col-sm-1 control-label">Navn</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="inputName" name="name">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-1 col-sm-4">
+                <button type="submit" class="btn btn-default">Lagre</button>
+            </div>
+        </div>
+    </fieldset>
+</script>
 
 {% endblock %}
