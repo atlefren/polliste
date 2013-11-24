@@ -7,10 +7,12 @@ class Pol(Base):
     __tablename__ = 'pol'
     id = Column(Integer, primary_key=True)
     name = Column(String(50))
+    address = Column(String(50))
 
-    def __init__(self, name):
+    def __init__(self, name, **kwargs):
         assert len(name) > 0
         self.name = name
+        self.address = kwargs.get("address", None)
 
 class Beer(Base):
     __tablename__ = 'Beer'

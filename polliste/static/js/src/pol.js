@@ -28,7 +28,10 @@ var Polliste = window.Polliste || {};
         },
 
         createPol: function () {
-            var pol = new Pol({"name": this.$("#inputName").val()});
+            var pol = new Pol({
+                "name": this.$("#inputName").val(),
+                "address": this.$("#inputAddress").val()
+            });
             pol.save({}, {"success": this.saved});
             return false;
         },

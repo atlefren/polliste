@@ -45,7 +45,7 @@ class PolApiTest(unittest.TestCase):
                 sess['user_id'] = int(u.get_id())
                 sess['_fresh'] = True
 
-            data = { "name": "Pol 4"}
+            data = { "name": "Pol 4", "address": "address bla bla"}
             rv = c.post(
                 "/api/v1/pol/",
                 data = json.dumps(data),
@@ -55,6 +55,7 @@ class PolApiTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 201)
         data = json.loads(rv.data)
         self.assertEqual(data["name"], "Pol 4")
+        self.assertEqual(data["address"], "address bla bla")
         self.assertEqual(data["id"], 4)
         self.assertEqual(len(self.app.db_session.query(Pol).all()), 4)
 

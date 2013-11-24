@@ -24,7 +24,8 @@ def ensure_admin(func):
 
 pol_fields = {
     'id': fields.Integer,
-    'name': fields.String
+    'name': fields.String,
+    'address': fields.String,
 }
 
 class SinglePolResource(restful.Resource):
@@ -49,10 +50,10 @@ class PolResource(restful.Resource):
     @ensure_admin
     def post(self):
         data = request.get_json()
-        name = data.get('name')
+        name = data.pop('name')
         if name is None:
             abort(400)
-        pol = Pol(name)
+        pol = Pol(name, **data)
         current_app.db_session.add(pol)
         current_app.db_session.commit()
 
