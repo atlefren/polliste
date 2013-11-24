@@ -1,5 +1,8 @@
 import os
 import app
+import flask
+
+from polliste.models import User
 
 def setup_app():
     the_app = app.create_app(

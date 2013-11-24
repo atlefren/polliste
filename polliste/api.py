@@ -1,7 +1,26 @@
-from flask import current_app, request
+from flask import current_app, request, g
 from flask.ext import restful
 from flask.ext.restful import abort, fields, marshal, marshal_with
+from functools import wraps
+
 from models import Pol, Brewery, Beer
+
+
+def authenticate(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if g.user.is_authenticated():
+            return func(*args, **kwargs)
+        restful.abort(401)
+    return wrapper
+
+def ensure_admin(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if g.user.is_authenticated() and g.user.is_admin:
+            return func(*args, **kwargs)
+        restful.abort(401)
+    return wrapper
 
 pol_fields = {
     'id': fields.Integer,
@@ -26,6 +45,8 @@ class PolResource(restful.Resource):
         return pol.all()
 
     @marshal_with(pol_fields)
+    @authenticate
+    @ensure_admin
     def post(self):
         data = request.get_json()
         name = data.get('name')
@@ -56,8 +77,8 @@ class BreweryResource(restful.Resource):
         return breweries.all()
 
 
-
     @marshal_with(brewery_fields)
+    @authenticate
     def post(self):
         data = request.get_json()
         name = data.get('name')
@@ -80,7 +101,9 @@ beer_fields = {
 }
 
 class BeerResource(restful.Resource):
+
     @marshal_with(beer_fields)
+    @authenticate
     def post(self):
         data = request.get_json()
         name = data.pop('name')

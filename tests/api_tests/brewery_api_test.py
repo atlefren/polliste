@@ -2,7 +2,7 @@ from flask import Flask
 import unittest
 import json
 
-from polliste.models import Brewery
+from polliste.models import Brewery, User
 from test_config import setup_app, remove_app
 
 class BreweryApiTest(unittest.TestCase):
@@ -20,7 +20,28 @@ class BreweryApiTest(unittest.TestCase):
     def tearDown(self):
         remove_app(self.app)
 
-    def test_can_create_brewery(self):
+    def test_user_can_create_brewery(self):
+        u = User(username='a', email='a@b.c', name='a', role=0)
+        self.app.db_session.add(u)
+        self.app.db_session.commit()
+        with self.app.test_client() as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = int(u.get_id())
+                sess['_fresh'] = True
+
+            data = { "name": "Brewery1"}
+            rv = c.post(
+                "/api/v1/breweries/",
+                data = json.dumps(data),
+                content_type='application/json'
+            )
+
+        self.assertEqual(rv.status_code, 201)
+        data = json.loads(rv.data)
+        self.assertEqual(data["name"], "Brewery1")
+        self.assertEqual(data["id"], 4)
+
+    def test_anonymous_cannot_create_brewery(self):
         data = { "name": "Brewery1"}
         rv = self.client.post(
             "/api/v1/breweries/",
@@ -28,10 +49,7 @@ class BreweryApiTest(unittest.TestCase):
             content_type='application/json'
         )
 
-        self.assertEqual(201, rv.status_code)
-        data = json.loads(rv.data)
-        self.assertEqual(data["name"], "Brewery1")
-        self.assertEqual(data["id"], 4)
+        self.assertEqual(rv.status_code, 401)
 
     def test_can_search_for_brewery(self):
         rv = self.client.get("/api/v1/breweries/?query=noe")
