@@ -104,6 +104,16 @@ beer_fields = {
 class BeerResource(restful.Resource):
 
     @marshal_with(beer_fields)
+    def get(self):
+        beers = current_app.db_session.query(Beer)
+
+        if request.args.get("query"):
+            name_filter = Beer.name.ilike('%%%s%%' % request.args['query'])
+            beers = beers.filter(name_filter)
+        return beers.all()
+
+
+    @marshal_with(beer_fields)
     @ensure_user
     def post(self):
         data = request.get_json()

@@ -10,7 +10,15 @@ class BeerApiTest(unittest.TestCase):
         self.app, self.client = setup_app()
 
         brewery1 = Brewery("Brewery 1")
+
+        beer1 = Beer("Beer 1", brewery1)
+        beer2 = Beer("test ", brewery1)
+        beer3 = Beer("Beer 2", brewery1)
+
         self.app.db_session.add(brewery1)
+        self.app.db_session.add(beer1)
+        self.app.db_session.add(beer2)
+        self.app.db_session.add(beer3)
         self.app.db_session.commit()
 
     def tearDown(self):
@@ -36,7 +44,7 @@ class BeerApiTest(unittest.TestCase):
 
         self.assertEqual(rv.status_code, 201)
         data = json.loads(rv.data)
-        self.assertEqual(data["id"], 1)
+        self.assertEqual(data["id"], 4)
         self.assertEqual(data["name"], "Beer 1")
         self.assertEqual(data["abv"], 4.5)
         self.assertEqual(data["size"], 33)
@@ -53,3 +61,20 @@ class BeerApiTest(unittest.TestCase):
         )
 
         self.assertEqual(rv.status_code, 401)
+
+    def test_can_search_for_beer(self):
+        rv = self.client.get("/api/v1/beers/?query=beer")
+        self.assertEqual(200, rv.status_code)
+        data = json.loads(rv.data)
+        self.assertEqual(len(data), 2)
+
+        rv = self.client.get("/api/v1/beers/?query=beer 1")
+        self.assertEqual(200, rv.status_code)
+        data = json.loads(rv.data)
+        self.assertEqual(len(data), 1)
+
+    def xtest_can_search_for_beer_and_brewery(self):
+        rv = self.client.get("/api/v1/beers/?query=brewery 1 test")
+        self.assertEqual(200, rv.status_code)
+        data = json.loads(rv.data)
+        self.assertEqual(len(data), 1)
