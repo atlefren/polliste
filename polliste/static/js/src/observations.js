@@ -365,8 +365,8 @@ var Polliste = window.Polliste || {};
             this.beerForm.on("addChild", this.addBrewery, this);
 
             this.breweryForm.on("saved", this.brewerySaved, this);
-
             this.beerForm.on("saved", this.beerSaved, this);
+            this.observationForm.on("saved", this.observationSaved, this);
         },
 
         render: function () {
@@ -402,6 +402,10 @@ var Polliste = window.Polliste || {};
             this.beerForm.$el.hide();
             this.observationForm.render().$el.show();
             this.observationForm.select(beer);
+        },
+
+        observationSaved: function () {
+            location.reload();
         }
     });
 
@@ -429,7 +433,7 @@ var Polliste = window.Polliste || {};
             var div = $("<div></div>");
             this.form = new ObservationView({"el": div, "pol": this.pol}).render();
             this.form.$el.hide();
-            this.$el.append(this.button.render().$el)
+            this.$el.append(this.button.render().$el);
             this.$el.append(div);
             return this;
         }
