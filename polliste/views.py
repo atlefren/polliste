@@ -5,7 +5,7 @@ from flask.ext.login import current_user
 from flask.ext.login import login_required
 from functools import wraps
 
-from models import Pol
+from models import Pol, Observation
 from login_setup import setup_login
 
 
@@ -44,13 +44,14 @@ def setup_views(app):
     @app.route('/pol/<int:pol_id>')
     def pol(pol_id):
         pol = app.db_session.query(Pol).get(pol_id)
+
+        observations = app.db_session.query(Observation).filter(Observation.pol==pol).all()
+
+        print observations
+
         if pol is None:
             abort(404)
-        return render_template("pol.html", pol=pol)
-
-    @app.route('/test')
-    def test():
-        return render_template("test.html")
+        return render_template("pol.html", pol=pol, observations=observations)
 
     @app.route('/admin')
     @login_required

@@ -4,7 +4,26 @@
 <h1>Observasjoner på {{pol.name}}</h1>
 
         <div id="observations">
-            <p>Ingen enda..</p>
+            <ul>
+                {% if observations %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr><th>Navn</th><th>Bryggeri</th><th>Observert</th><th>Av</th><th>Kommentar</th></tr>
+                    </thead>
+                    <tbody>
+                {% for observation in observations %}
+                    <tr>
+                        <td>{{observation.beer.name}}</td>
+                        <td>{{observation.beer.brewery.name}}</td>
+                        <td>{{observation.time}}</td>
+                        <td>{{observation.user.name}}</td>
+                        <td>{{observation.comment}}</td>
+                    </tr>
+                {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            </ul>
         </div>
 
         <div id="add_observation">

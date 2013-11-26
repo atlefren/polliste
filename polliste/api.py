@@ -3,7 +3,7 @@ from flask.ext import restful
 from flask.ext.restful import abort, fields, marshal, marshal_with
 from functools import wraps
 
-from models import Pol, Brewery, Beer
+from models import Pol, Brewery, Beer, Observation
 
 
 def ensure_user(func):
@@ -130,10 +130,45 @@ class BeerResource(restful.Resource):
 
         return beer, 201
 
+class DateTime(fields.Raw):
+    def format(self, value):
+        return value.isoformat()
+
+observation_fields = {
+    'id': fields.Integer,
+    'pol': fields.Nested(pol_fields),
+    'time': DateTime,
+    'beer': fields.Nested(beer_fields),
+    'comment': fields.String
+}
+
+class ObservationResource(restful.Resource):
+    @marshal_with(observation_fields)
+    @ensure_user
+    def post(self, pol_id):
+        data = request.get_json()
+        beer_id = data.pop('beer')
+
+        pol = current_app.db_session.query(Pol).get(pol_id)
+        beer = current_app.db_session.query(Beer).get(beer_id)
+
+        if beer is None or pol is None:
+            abort(400)
+
+        comment = data.pop("comment", None)
+        observation = Observation(beer, g.user, pol, comment)
+
+        current_app.db_session.add(observation)
+        current_app.db_session.commit()
+        current_app.db_session.refresh(observation)
+
+        return observation, 201
+
 def create_api(app, api_version):
     api = restful.Api(app)
     api.add_resource(PolResource, '/api/%s/pol/' % api_version)
     api.add_resource(SinglePolResource, '/api/%s/pol/<int:pol_id>' % api_version)
     api.add_resource(BreweryResource, '/api/%s/breweries/' % api_version)
     api.add_resource(BeerResource, '/api/%s/beers/' % api_version)
+    api.add_resource(ObservationResource, '/api/%s/pol/<int:pol_id>/observations/' % api_version)
     return app

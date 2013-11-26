@@ -6,6 +6,7 @@ import unittest
 from api_tests.brewery_api_test import *
 from api_tests.pol_api_test import *
 from api_tests.beer_api_test import *
+from api_tests.observation_api_test import *
 
 if __name__ == "__main__":
     unittest.main()

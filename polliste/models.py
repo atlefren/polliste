@@ -1,13 +1,32 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, SmallInteger
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, SmallInteger, Text, DateTime
 from sqlalchemy.orm import relationship, backref
 
+from datetime import datetime
+
 from database import Base
+
+class Observation(Base):
+    __tablename__ = 'observation'
+    id = Column(Integer, primary_key = True)
+    comment = Column(Text)
+    beer_id = Column(Integer, ForeignKey('beer.id'))
+    pol_id = Column(Integer, ForeignKey('pol.id'))
+    user_id = Column(Integer, ForeignKey('user.id'))
+    time = Column(DateTime, nullable=False, default=datetime.now)
+
+    def __init__(self, beer, user, pol, comment):
+        assert beer and user and pol
+        self.beer = beer
+        self.user = user
+        self.pol = pol
+        self.comment = comment
 
 class Pol(Base):
     __tablename__ = 'pol'
     id = Column(Integer, primary_key=True)
     name = Column(String(50))
     address = Column(String(50))
+    observations = relationship(Observation, backref="pol")
 
     def __init__(self, name, **kwargs):
         assert len(name) > 0
@@ -15,10 +34,11 @@ class Pol(Base):
         self.address = kwargs.get("address", None)
 
 class Beer(Base):
-    __tablename__ = 'Beer'
+    __tablename__ = 'beer'
     id = Column(Integer, primary_key=True)
     name = Column(String(50))
     brewery_id = Column(Integer, ForeignKey('brewery.id'))
+    observations = relationship(Observation, backref="beer")
     style = Column(String(50))
     abv  = Column(Float)
     size = Column(Float)
@@ -37,6 +57,7 @@ class Brewery(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50))
     beers = relationship(Beer, backref="brewery")
+
     def __init__(self, name):
         assert len(name) > 0
         self.name = name
@@ -51,6 +72,7 @@ class User(Base):
     email = Column(String(120), index = True, unique = True)
     role = Column(SmallInteger, default = ROLE_USER)
     name = Column(String(120), index = True, unique = True)
+    observations = relationship(Observation, backref="user")
 
     def is_authenticated(self):
         return True
