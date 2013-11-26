@@ -48,6 +48,15 @@ var Polliste = window.Polliste || {};
 
         getName: function () {
             return this.get("name") + " (" + this.get("brewery").name + ")";
+        },
+
+        toJSON: function () {
+            return _.reduce(_.clone(this.attributes), function (res, value, key){
+                if (value !== "") {
+                    res[key] = value;
+                }
+                return res;
+            }, {});
         }
     });
 

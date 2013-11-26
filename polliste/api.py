@@ -125,8 +125,16 @@ class BeerResource(restful.Resource):
         brewery = current_app.db_session.query(Brewery).get(brewery_id)
         beer = Beer(name, brewery, **data)
         current_app.db_session.add(beer)
-        current_app.db_session.commit()
-        current_app.db_session.refresh(beer)
+
+        print beer
+
+        try:
+            current_app.db_session.commit()
+            print "...?"
+            current_app.db_session.refresh(beer)
+        except Exception, e:
+            print e
+        print "!!"
 
         return beer, 201
 

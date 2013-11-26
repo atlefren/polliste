@@ -46,6 +46,9 @@ class Beer(Base):
     def __init__(self, name, brewery, **kwargs):
         assert len(name) > 0
         assert brewery
+
+        print "??", kwargs.get("style", None)
+
         self.name = name
         self.brewery =  brewery
         self.style = kwargs.get("style", None)
