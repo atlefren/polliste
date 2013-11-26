@@ -3,6 +3,122 @@
 
 <h1>Observasjoner på {{pol.name}}</h1>
 
-        <p>Ingen enda..</p>
+        <div id="observations">
+            <p>Ingen enda..</p>
+        </div>
+
+        <div id="add_observation">
+
+        </div>
+
+{% endblock %}
+
+{% block js %}
+{{ super() }}
+
+{% assets "observations_js" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+<script type="text/javascript">
+    (function () {
+        "use strict";
+        {% if g.user.is_authenticated() %}
+            new Polliste.AddObservationView({
+                "el": $("#add_observation"),
+                "list": $("#observations"),
+                "pol": {{pol.id}}
+            }).render();
+        {% endif %}
+    }());
+</script>
+{% endblock %}
+
+{% block templates %}
+{{ super() }}
+
+<script type="text/template" id="observation_form_template">
+    <fieldset>
+        <legend>Ny observasjon</legend>
+        <div class="form-group">
+            <label for="inputBeer" class="col-sm-2 control-label">Øl</label>
+            <div class="col-sm-6" id="inputBeer">
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputComment" class="col-sm-2 control-label">Kommentar</label>
+            <div class="col-sm-6">
+                <textarea class="form-control" rows="3" id="inputComment"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-6">
+                <button type="button" id="save" class="btn btn-default">Lagre</button>
+            </div>
+        </div>
+    </fieldset>
+</script>
+
+<script type="text/template" id="beer_form_template">
+    <fieldset>
+        <legend>Nytt øl</legend>
+        <div class="form-group">
+            <label for="inputBeerName" class="col-sm-2 control-label">Navn</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="inputBeerName" value="<%= name %>">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputBrewery" class="col-sm-2 control-label">Bryggeri</label>
+            <div class="col-sm-6" id="inputBrewery">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputStyle" class="col-sm-2 control-label">Ølstil</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="inputStyle" value="<%= style %>">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputAbv" class="col-sm-2 control-label">ABV (%)</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="inputAbv" value="<%= abv %>">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputSize" class="col-sm-2 control-label">Størrelse (ml)</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="inputSize" value="<%= size %>">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-6">
+                <button type="button" id="save" class="btn btn-default">Lagre</button>
+            </div>
+        </div>
+    </fieldset>
+</script>
+
+<script type="text/template" id="brewery_form_template">
+    <fieldset>
+        <legend>Nytt bryggeri</legend>
+        <div class="form-group">
+            <label for="inputBreweryName" class="col-sm-2 control-label">Navn</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="inputBreweryName">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-6">
+                <button type="button" id="save" class="btn btn-default">Lagre</button>
+            </div>
+        </div>
+    </fieldset>
+</script>
+
+<script type="text/template" id="typeahead_template">
+    <input type="text" class="form-control">
+</script>
 
 {% endblock %}

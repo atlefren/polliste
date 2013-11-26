@@ -11,3 +11,10 @@ adminpage_js = Bundle(
     filters=['jsmin'],
     output='gen/js/adminpage.js'
 )
+
+
+observations_js = Bundle(
+    'js/src/observations.js',
+    filters=['jsmin'],
+    output='gen/js/observationspage.js'
+)

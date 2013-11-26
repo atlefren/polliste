@@ -48,6 +48,10 @@ def setup_views(app):
             abort(404)
         return render_template("pol.html", pol=pol)
 
+    @app.route('/test')
+    def test():
+        return render_template("test.html")
+
     @app.route('/admin')
     @login_required
     @admin_required
