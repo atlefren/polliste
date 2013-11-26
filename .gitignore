@@ -2,4 +2,6 @@ venv
 tmp
 *.db
 polliste/static/.webassets-cache
+polliste/static/gen
 .env
+.pyc
