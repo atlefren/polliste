@@ -45,9 +45,9 @@ def setup_views(app):
     def pol(pol_id):
         pol = app.db_session.query(Pol).get(pol_id)
 
-        observations = app.db_session.query(Observation).filter(Observation.pol==pol).all()
-
-        print observations
+        observations = app.db_session.query(Observation).\
+            filter(Observation.pol==pol).\
+                order_by(Observation.time.desc()).all()
 
         if pol is None:
             abort(404)

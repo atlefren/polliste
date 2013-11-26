@@ -15,7 +15,7 @@
                     <tr>
                         <td>{{observation.beer.name}}</td>
                         <td>{{observation.beer.brewery.name}}</td>
-                        <td>{{observation.time}}</td>
+                        <td>{{observation.time.strftime('%d.%m.%Y')}}</td>
                         <td>{{observation.user.name}}</td>
                         <td>{{observation.comment}}</td>
                     </tr>
