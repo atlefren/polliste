@@ -34,7 +34,6 @@ def setup_views(app):
     @app.route('/')
     def index():
         pol = app.db_session.query(Pol).all()
-        print pol
         return render_template("index.html", pol_list=pol)
 
     @app.route('/about')
