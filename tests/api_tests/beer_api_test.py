@@ -52,6 +52,34 @@ class BeerApiTest(unittest.TestCase):
         self.assertEqual(data["brewery"]["id"], 1)
         self.assertEqual(data["brewery"]["name"], "Brewery 1")
 
+    def test_user_can_create_beer_with_just_name_and_brewery(self):
+
+        u = User(username='a', email='a@b.c', name='a', role=0)
+        self.app.db_session.add(u)
+        self.app.db_session.commit()
+        # login user
+        with self.app.test_client() as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = int(u.get_id())
+                sess['_fresh'] = True
+
+            data = { "name": "Beer 1", "brewery": 1}
+            rv = c.post(
+                "/api/v1/beers/",
+                data = json.dumps(data),
+                content_type='application/json'
+            )
+
+        self.assertEqual(rv.status_code, 201)
+        data = json.loads(rv.data)
+        self.assertEqual(data["id"], 4)
+        self.assertEqual(data["name"], "Beer 1")
+        self.assertEqual(data["abv"], None)
+        self.assertEqual(data["size"], None)
+        self.assertEqual(data["style"], None)
+        self.assertEqual(data["brewery"]["id"], 1)
+        self.assertEqual(data["brewery"]["name"], "Brewery 1")
+
     def test_anonymous_create_beer(self):
         data = { "name": "Beer 1", "brewery": 1, "style": "lager", "abv": 4.5, "size": 33}
         rv = self.client.post(

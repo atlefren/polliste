@@ -39,9 +39,9 @@ class Beer(Base):
     name = Column(String(50))
     brewery_id = Column(Integer, ForeignKey('brewery.id'))
     observations = relationship(Observation, backref="beer")
-    style = Column(String(50))
-    abv  = Column(Float)
-    size = Column(Float)
+    style = Column(String(50), nullable=True)
+    abv  = Column(Float, nullable=True)
+    size = Column(Float, nullable=True)
 
     def __init__(self, name, brewery, **kwargs):
         assert len(name) > 0
